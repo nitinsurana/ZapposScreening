@@ -35,6 +35,8 @@ public class ProductActivity extends AppCompatActivity {
         ContentProductBinding binding = DataBindingUtil.setContentView(this, R.layout.content_product);
         binding.setProduct(bean);
 
+        setTitle("ILoveZappos");
+
         ImageView img = (ImageView) findViewById(R.id.product_img);
         Picasso.with(img.getContext())
                 .load(bean.getThumbnailImageUrl())

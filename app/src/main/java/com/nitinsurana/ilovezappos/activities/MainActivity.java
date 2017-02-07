@@ -1,5 +1,6 @@
 package com.nitinsurana.ilovezappos.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,10 +26,14 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ProgressDialog progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final MainActivity activityRef = this;
 
         final EditText searchInput = (EditText) findViewById(R.id.search_input);
         searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -44,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_NULL
                         && event.getAction() == KeyEvent.ACTION_DOWN) {
                     Log.d("info", "Enter pressed (action down)");
+                    progress = new ProgressDialog(activityRef);
+                    progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progress.setTitle("Searching...");
+//                    progress.setMessage("Wait while loading...");
+                    progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+                    progress.setIndeterminate(true);
+                    progress.show();
                     search(searchInput.getText().toString());
                 }
                 return false;
@@ -69,9 +81,11 @@ public class MainActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         ApiResult resultBean = response.body();
                         if (resultBean.getResults().isEmpty()) {
+                            progress.dismiss();
                             Toast.makeText(getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
                         } else {
                             loadProductActivity(resultBean.getResults().get(9));
+                            progress.dismiss();
                         }
                     }
                 }
