@@ -1,5 +1,7 @@
 package com.nitinsurana.ilovezappos.beans;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 
 /**
@@ -12,6 +14,23 @@ public class ProductBean implements Serializable {
 //            "colorId":"38264","price":"$50.00","percentOff":"0%","productUrl":"http:\/\/www.zappos.com\/product\/7174012\/color\/38264","productName":"Castro"},
     private String brandName, thumbnailImageUrl, productId, originalPrice, styleId;
     private String colorId, price, percentOff, productUrl, productName;
+    private float f_price, f_originalPrice;
+
+    public float getF_price() {
+        return f_price;
+    }
+
+    public void setF_price(float f_price) {
+        this.f_price = f_price;
+    }
+
+    public float getF_originalPrice() {
+        return f_originalPrice;
+    }
+
+    public void setF_originalPrice(float f_originalPrice) {
+        this.f_originalPrice = f_originalPrice;
+    }
 
     public String getBrandName() {
         return brandName;
@@ -43,6 +62,11 @@ public class ProductBean implements Serializable {
 
     public void setOriginalPrice(String originalPrice) {
         this.originalPrice = originalPrice;
+        if (StringUtils.isNotBlank(originalPrice) && StringUtils.isNotBlank(originalPrice.replace("$", ""))) {
+            this.setF_originalPrice(Float.parseFloat(originalPrice.replace("$", "")));
+        } else {
+            this.setF_originalPrice(0.0f);
+        }
     }
 
     public String getStyleId() {
@@ -67,6 +91,11 @@ public class ProductBean implements Serializable {
 
     public void setPrice(String price) {
         this.price = price;
+        if (StringUtils.isNotBlank(price) && StringUtils.isNotBlank(price.replace("$", ""))) {
+            this.setF_price(Float.parseFloat(price.replace("$", "")));
+        } else {
+            this.setF_price(0.0f);
+        }
     }
 
     public String getPercentOff() {

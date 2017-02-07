@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_product"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.nitinsurana.ilovezappos.activities.ProductActivity"
     tools:showIn="@layout/activity_product">
 
@@ -14,34 +13,83 @@
             type="com.nitinsurana.ilovezappos.beans.ProductBean"></variable>
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/product_img"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:scrollbars="vertical">
 
-        <TextView
-            android:id="@+id/brand_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{product.brandName}"
-            android:textSize="56sp"
-            android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/product_img"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="fitXY" />
 
-        <TextView
-            android:id="@+id/product_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="@{product.productName}" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
 
-    </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/brand_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:text="@{product.brandName}"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{product.price}"
+                            android:textColor="#26BDAD"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/f_original_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@={product.originalPrice}"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/percent_off"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@={product.percentOff}"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="@{product.productName}" />
+        </LinearLayout>
+    </ScrollView>
 </layout>

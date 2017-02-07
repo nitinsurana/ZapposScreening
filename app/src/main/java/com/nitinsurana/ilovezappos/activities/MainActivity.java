@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         if (resultBean.getResults().isEmpty()) {
                             Toast.makeText(getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
                         } else {
-                            loadProductActivity(resultBean.getResults().get(0));
+                            loadProductActivity(resultBean.getResults().get(9));
                         }
                     }
                 }
