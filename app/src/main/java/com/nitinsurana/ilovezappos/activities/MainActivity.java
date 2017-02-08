@@ -28,34 +28,34 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog progress;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         final MainActivity activityRef = this;
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            String action = intent.getAction();
+            String data = intent.getData() != null ? intent.getData().toString() : "";
+            System.out.println("Share Intent data : " + action + "  " + data);
+            if (action == Intent.ACTION_VIEW) {
+                String term = data.split("/term/")[1];
+                showProgressDialog(this);
+                search(term);
+                return;
+            }
+        }
 
         final EditText searchInput = (EditText) findViewById(R.id.search_input);
         searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                performSearch();
-//                    return true;
-//                } else if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                    Log.d("info", "Done fired");
-//                    return true;
-//                } else
                 if (actionId == EditorInfo.IME_NULL
                         && event.getAction() == KeyEvent.ACTION_DOWN) {
                     Log.d("info", "Enter pressed (action down)");
-                    progress = new ProgressDialog(activityRef);
-                    progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progress.setTitle("Searching...");
-//                    progress.setMessage("Wait while loading...");
-                    progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
-                    progress.setIndeterminate(true);
-                    progress.show();
+                    showProgressDialog(activityRef);
                     search(searchInput.getText().toString());
                 }
                 return false;
@@ -64,15 +64,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void loadProductActivity(ProductBean productBean) {
+    private void showProgressDialog(MainActivity activityRef) {
+        progress = new ProgressDialog(activityRef);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setTitle("Searching...");
+        progress.setCancelable(false);
+        progress.setIndeterminate(true);
+        progress.show();
+    }
+
+    public void loadProductActivity(ProductBean productBean, String term) {
         Intent intent = new Intent(this, ProductActivity.class);
         intent.putExtra("bean", productBean);
+        intent.putExtra("term", term);
         startActivity(intent);
     }
 
-    public void search(String term) {
+    public void search(final String term) {
         ZapposApi service = ZapposApiFactory.getApiInstance();
-        final MainActivity activityRef = this;
         try {
             Call<ApiResult> call = service.listRepos(term);
             call.enqueue(new Callback<ApiResult>() {
@@ -84,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                             progress.dismiss();
                             Toast.makeText(getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
                         } else {
-                            loadProductActivity(resultBean.getResults().get(9));
+                            loadProductActivity(resultBean.getResults().get(9), term);
                             progress.dismiss();
                         }
                     }
@@ -95,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-//            System.out.println(ToStringBuilder.reflectionToString(result, ToStringStyle.MULTI_LINE_STYLE));
         } catch (Exception ex) {
             Log.d("error", "Api search call threw error : " + ex.getLocalizedMessage());
         }
