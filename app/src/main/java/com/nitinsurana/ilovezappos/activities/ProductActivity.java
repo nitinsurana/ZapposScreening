@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 //import android.widget.ShareActionProvider;
 import android.widget.TextView;
@@ -56,15 +58,6 @@ public class ProductActivity extends AppCompatActivity {//implements ShareAction
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         ProductBean bean = (ProductBean) getIntent().getSerializableExtra("bean");
         searchTerm = getIntent().getSerializableExtra("term").toString();
         ContentProductBinding binding = DataBindingUtil.setContentView(this, R.layout.content_product);
@@ -86,5 +79,14 @@ public class ProductActivity extends AppCompatActivity {//implements ShareAction
             txtOriginalPrice.setPaintFlags(txtOriginalPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             txtPercentOff.setText(txtPercentOff.getText() + " Off");
         }
+    }
+
+    public void addToCart(View v) {
+        Toast.makeText(getApplicationContext(), "Added to cart", Toast.LENGTH_SHORT).show();
+        final Animation an = new RotateAnimation(0, 90, v.getWidth() / 2, v.getHeight() / 2);
+        an.setDuration(200);
+        an.setFillAfter(true);
+        v.clearAnimation();
+        v.startAnimation(an);
     }
 }
