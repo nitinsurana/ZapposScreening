@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Share Intent data : " + action + "  " + data);
             if (action == Intent.ACTION_VIEW) {
                 String term = data.split("/term/")[1];
-                showProgressDialog(this);
+                findViewById(R.id.search_form).setVisibility(View.INVISIBLE);
+                showProgressDialog(this, "Loading...");
                 search(term);
                 return;
             }
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_NULL
                         && event.getAction() == KeyEvent.ACTION_DOWN) {
                     Log.d("info", "Enter pressed (action down)");
-                    showProgressDialog(activityRef);
+                    showProgressDialog(activityRef, "Searching...");
                     search(searchInput.getText().toString());
                 }
                 return false;
@@ -64,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void showProgressDialog(MainActivity activityRef) {
+    private void showProgressDialog(MainActivity activityRef, String title) {
         progress = new ProgressDialog(activityRef);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setTitle("Searching...");
+        progress.setTitle(title);
         progress.setCancelable(false);
         progress.setIndeterminate(true);
         progress.show();
